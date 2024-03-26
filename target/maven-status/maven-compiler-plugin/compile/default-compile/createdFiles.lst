@@ -1,0 +1,17 @@
+ru\blackmirrror\traveller\configuration\SecurityConfig.class
+ru\blackmirrror\traveller\repositories\MarkRepository.class
+ru\blackmirrror\traveller\TravellerApplication.class
+ru\blackmirrror\traveller\models\Favorite.class
+ru\blackmirrror\traveller\models\Subscribe.class
+ru\blackmirrror\traveller\controller\MarkController.class
+ru\blackmirrror\traveller\controller\UserController.class
+ru\blackmirrror\traveller\models\User.class
+ru\blackmirrror\traveller\repositories\FavoriteRepository.class
+ru\blackmirrror\traveller\controller\SubscribeController.class
+ru\blackmirrror\traveller\services\FavoriteService.class
+ru\blackmirrror\traveller\services\UserService.class
+ru\blackmirrror\traveller\models\Mark.class
+ru\blackmirrror\traveller\repositories\SubscribeRepository.class
+ru\blackmirrror\traveller\services\MarkService.class
+ru\blackmirrror\traveller\repositories\UserRepository.class
+ru\blackmirrror\traveller\services\SubscribeService.class
