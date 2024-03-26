@@ -9,6 +9,7 @@ import ru.blackmirrror.traveller.models.User;
 import ru.blackmirrror.traveller.services.SubscribeService;
 import ru.blackmirrror.traveller.services.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,12 +22,15 @@ public class SubscribeController {
     @Autowired UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<Subscribe>> getAllSubscribesByUserId(@PathVariable Long id) {
+    public ResponseEntity<List<User>> getAllSubscribesByUserId(@PathVariable Long id) {
         List<Subscribe> subscribes = subscribeService.getAllSubscribesByUserId(id);
         if (!subscribes.isEmpty()) {
-            return ResponseEntity.ok(subscribes);
+            List<User> users = new ArrayList<>();
+            for (Subscribe s: subscribes)
+                users.add(s.getSubscribe());
+            return ResponseEntity.ok(users);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 

@@ -31,7 +31,7 @@ public class MarkController {
         if (!marks.isEmpty()) {
             return ResponseEntity.ok(marks);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 
@@ -74,7 +74,7 @@ public class MarkController {
         if (!marks.isEmpty()) {
             return ResponseEntity.ok(marks);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.noContent().build();
         }
     }
 
