@@ -21,6 +21,6 @@ public class SubscribeService {
     }
 
     public void deleteSubscribe(Long id) {
-        subscribeRepository.deleteById(id);
+        subscribeRepository.deleteBySubscribeId(id);
     }
 }
