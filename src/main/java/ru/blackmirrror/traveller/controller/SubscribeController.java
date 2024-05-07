@@ -22,13 +22,10 @@ public class SubscribeController {
     @Autowired UserService userService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<User>> getAllSubscribesByUserId(@PathVariable Long id) {
+    public ResponseEntity<List<Subscribe>> getAllSubscribesByUserId(@PathVariable Long id) {
         List<Subscribe> subscribes = subscribeService.getAllSubscribesByUserId(id);
         if (!subscribes.isEmpty()) {
-            List<User> users = new ArrayList<>();
-            for (Subscribe s: subscribes)
-                users.add(s.getSubscribe());
-            return ResponseEntity.ok(users);
+            return ResponseEntity.ok(subscribes);
         } else {
             return ResponseEntity.noContent().build();
         }
