@@ -25,13 +25,13 @@ public class UserService {
 
     public User registerUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (userRepository.findByUsername(user.getUsername()) != null)
+        if (userRepository.findByEmail(user.getEmail()) != null)
             return null;
         return userRepository.save(user);
     }
 
     public User loginUser(User loginUser) {
-        User user = userRepository.findByUsername(loginUser.getUsername());
+        User user = userRepository.findByEmail(loginUser.getEmail());
         if (user != null && passwordEncoder.matches(loginUser.getPassword(), user.getPassword()))
             return user;
         return null;
