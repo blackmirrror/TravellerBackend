@@ -43,6 +43,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/phone/{phone}")
+    public ResponseEntity<User> getUserByPhone(@PathVariable String phone) {
+        User user = userService.getUserByPhone(phone);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User user) {
         User updatedUser = userService.updateUser(id, user);
@@ -57,6 +67,16 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/query/{q}")
+    public ResponseEntity<List<User>> getUsersBySearch(@PathVariable String q) {
+        List<User> users = userService.getUsersBySearch(q);
+        if (users != null) {
+            return ResponseEntity.ok(users);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 }
 

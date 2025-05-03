@@ -32,6 +32,7 @@ public class Mark {
 
     @Column(name = "date_changes", nullable = false)
     private Long dateChanges;
+
     @Column(name = "date_create", nullable = false)
     private Long dateCreate;
 

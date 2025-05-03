@@ -3,9 +3,7 @@ package ru.blackmirrror.traveller.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "subscribes", indexes = {
-        @Index(name = "idx_user_id", columnList = "user_id")
-})
+@Table(name = "subscribes")
 public class Subscribe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

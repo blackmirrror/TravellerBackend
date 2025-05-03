@@ -7,7 +7,9 @@ import ru.blackmirrror.traveller.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserService {
@@ -23,24 +25,23 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
+    public User getUserByPhone(String phone) {
+        return userRepository.findByPhone(phone);
+    }
+
     public User registerUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        if (userRepository.findByEmail(user.getEmail()) != null)
-            return null;
+        if (userRepository.findByPhone(user.getPhone()) != null)
+            return loginUser(user);
         return userRepository.save(user);
     }
 
     public User loginUser(User loginUser) {
-        User user = userRepository.findByEmail(loginUser.getEmail());
-        if (user != null && passwordEncoder.matches(loginUser.getPassword(), user.getPassword()))
-            return user;
-        return null;
+        return userRepository.findByPhone(loginUser.getPhone());
     }
 
     public User updateUser(Long id, User user) {
         if (userRepository.existsById(id)) {
             user.setId(id);
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }
         return null;
@@ -48,6 +49,12 @@ public class UserService {
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public List<User> getUsersBySearch(String query) {
+        List<User> users = userRepository.searchUsers(query);
+        Set<User> set = new HashSet<>(users);
+        return set.stream().toList();
     }
 }
 
