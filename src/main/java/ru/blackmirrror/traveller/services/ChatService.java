@@ -11,6 +11,7 @@ import ru.blackmirrror.traveller.repositories.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,25 +30,31 @@ public class ChatService {
         User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<Chat> chats = chatRepository.findByUsers(currentUser);
+        List<Chat> chats = chatRepository.findChatsByUser(currentUser);
         List<ChatResponseDto> result = new ArrayList<>();
 
         for (Chat chat : chats) {
+
+            User companion;
+            if (Objects.equals(chat.getUser1().getId(), currentUser.getId())) companion = chat.getUser2();
+            else companion = chat.getUser1();
+
             ChatResponseDto dto = new ChatResponseDto();
             dto.setChatId(chat.getId());
-            dto.setImageUrl(chat.getImageUrl());
-            dto.setLastMessage(chat.getLastMessage());
+            dto.setImageUrl(companion.getPhotoUrl());
+//            dto.setImageUrl(chat.getImageUrl());
+            dto.setLastMessage(chat.getLastMessageText());
+//            dto.setLastMessage(chat.getLastMessage());
             dto.setLastMessageTime(chat.getLastMessageTime());
 
-            User companion = chat.getUsers().stream()
-                    .filter(u -> !u.getId().equals(userId))
-                    .findFirst()
-                    .orElse(null);
 
-            if (companion != null) {
-                dto.setTitle(companion.getUsername());
-                dto.setOnline(onlineUserTracker.isOnline(companion.getId()));
-            }
+//            User companion = chat.getUsers().stream()
+//                    .filter(u -> !u.getId().equals(userId))
+//                    .findFirst()
+//                    .orElse(null);
+
+            dto.setTitle(companion.getUsername());
+            dto.setOnline(onlineUserTracker.isOnline(companion.getId()));
 
             int unreadCount = messageRepository.countUnreadMessages(chat.getId(), currentUser);
             dto.setUnreadCount(unreadCount);
@@ -61,12 +68,13 @@ public class ChatService {
     public Chat createChat(List<Long> userIds) {
         List<User> users = userRepository.findAllById(userIds);
         Chat chat = new Chat();
-        chat.setUsers(users);
+        chat.setUser1(users.get(0));
+        chat.setUser2(users.get(1));
         return chatRepository.save(chat);
     }
 
-    public Optional<Chat> getChatById(Long id) {
-        return chatRepository.findById(id);
+    public Chat getChatById(Long id) {
+        return chatRepository.findById(id).orElseThrow();
     }
 
     public void deleteChat(Long id) {
@@ -74,13 +82,13 @@ public class ChatService {
     }
 
     public List<Long> getChatParticipantIds(Long chatId) {
-        Chat chat = chatRepository.findByIdWithUsers(chatId)
-                .orElseThrow(() -> new RuntimeException("Chat not found"));
-
-        return chat.getUsers()
-                .stream()
-                .map(User::getId)
-                .toList();
+        Chat chat = chatRepository.findByIdWithUsers(chatId);
+        List<Long> userIds = new ArrayList<>();
+        if (chat != null) {
+            userIds.add(chat.getUser1().getId());
+            userIds.add(chat.getUser2().getId());
+        }
+        return userIds;
     }
 }
 

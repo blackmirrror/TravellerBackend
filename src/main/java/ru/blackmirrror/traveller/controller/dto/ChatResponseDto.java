@@ -7,8 +7,8 @@ public class ChatResponseDto {
     private String imageUrl;
     private String lastMessage;
     private Long lastMessageTime;
-    private int unreadCount;
-    private boolean isOnline;
+    private Integer unreadCount;
+    private Boolean isOnline;
 
     public Long getChatId() {
         return chatId;
@@ -50,19 +50,19 @@ public class ChatResponseDto {
         this.lastMessageTime = lastMessageTime;
     }
 
-    public int getUnreadCount() {
+    public Integer getUnreadCount() {
         return unreadCount;
     }
 
-    public void setUnreadCount(int unreadCount) {
+    public void setUnreadCount(Integer unreadCount) {
         this.unreadCount = unreadCount;
     }
 
-    public boolean getOnline() {
+    public Boolean getOnline() {
         return isOnline;
     }
 
-    public void setOnline(boolean online) {
+    public void setOnline(Boolean online) {
         isOnline = online;
     }
 }

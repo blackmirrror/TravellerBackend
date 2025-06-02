@@ -4,8 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "users", indexes = {
-        @Index(name = "idx_username", columnList = "username"),
-        @Index(name = "idx_email", columnList = "email", unique = true),
+        @Index(name = "idx_username", columnList = "username", unique = true),
         @Index(name = "idx_phone", columnList = "phone", unique = true)
 })
 public class User {
@@ -13,13 +12,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
-    @Column(unique = true, name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
-    @Column(unique = true, name = "phone")
+    @Column(name = "phone", unique = true)
     private String phone;
 
     @Column(name = "first_name")
@@ -34,12 +33,17 @@ public class User {
     @Column(name = "photo_url")
     private String photoUrl;
 
-    @Column(name = "is_online")
-    private Boolean isOnline;
+    @Column(name = "online")
+    private Boolean online;
 
     @Column(name = "last_seen")
     private Long lastSeen;
 
+    @Column(name = "mark_count")
+    private Integer markCount;
+
+    @Column(name = "post_count")
+    private Integer postCount;
 
     public Long getId() {
         return id;
@@ -106,11 +110,11 @@ public class User {
     }
 
     public Boolean getOnline() {
-        return isOnline;
+        return online;
     }
 
     public void setOnline(Boolean online) {
-        isOnline = online;
+        this.online = online;
     }
 
     public Long getLastSeen() {
@@ -119,5 +123,21 @@ public class User {
 
     public void setLastSeen(Long lastSeen) {
         this.lastSeen = lastSeen;
+    }
+
+    public Integer getMarkCount() {
+        return markCount;
+    }
+
+    public void setMarkCount(Integer markCount) {
+        this.markCount = markCount;
+    }
+
+    public Integer getPostCount() {
+        return postCount;
+    }
+
+    public void setPostCount(Integer postCount) {
+        this.postCount = postCount;
     }
 }

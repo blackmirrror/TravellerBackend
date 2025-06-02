@@ -7,18 +7,26 @@ import ru.blackmirrror.traveller.models.Chat;
 import ru.blackmirrror.traveller.models.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-    @Query("SELECT DISTINCT c FROM Chat c JOIN c.users u " +
-            "WHERE LOWER(u.username) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :query, '%')) " +
-            "OR u.phone LIKE CONCAT('%', :query, '%')")
+
+    @Query("""
+                SELECT DISTINCT c FROM Chat c
+                WHERE LOWER(c.user1.username) LIKE LOWER(CONCAT('%', :query, '%'))
+                   OR LOWER(c.user1.email) LIKE LOWER(CONCAT('%', :query, '%'))
+                   OR c.user1.phone LIKE CONCAT('%', :query, '%')
+                   OR LOWER(c.user2.username) LIKE LOWER(CONCAT('%', :query, '%'))
+                   OR LOWER(c.user2.email) LIKE LOWER(CONCAT('%', :query, '%'))
+                   OR c.user2.phone LIKE CONCAT('%', :query, '%')
+            """)
     List<Chat> searchChats(@Param("query") String query);
 
-    List<Chat> findByUsers(User currentUser);
 
-    @Query("SELECT c FROM Chat c JOIN FETCH c.users WHERE c.id = :chatId")
-    Optional<Chat> findByIdWithUsers(@Param("chatId") Long chatId);
+    @Query("SELECT c FROM Chat c WHERE c.user1 = :user OR c.user2 = :user")
+    List<Chat> findChatsByUser(@Param("user") User user);
+
+    @Query("SELECT c FROM Chat c LEFT JOIN FETCH c.user1 LEFT JOIN FETCH c.user2 WHERE c.id = :chatId")
+    Chat findByIdWithUsers(@Param("chatId") Long chatId);
+
 }
 

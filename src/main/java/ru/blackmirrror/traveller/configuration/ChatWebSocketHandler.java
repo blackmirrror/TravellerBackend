@@ -75,7 +75,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
                         sendToUser(userId, mapper.writeValueAsString(Map.of(
                                 "type", "new_message",
                                 "chatId", chatId,
-                                "message", saved.getContent(),
+                                "message", saved.getText(),
                                 "senderId", senderId
                         )));
                     }
@@ -85,7 +85,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
             case "mark_as_read" -> {
                 Long messageId = node.get("messageId").asLong();
                 Long userId = extractUserId(session);
-                messageService.markAsRead(messageId, userId);
+                messageService.markAsRead(messageId);
 
                 // Получаем ID всех участников чата, кроме отправителя
                 Long chatId = node.get("chatId").asLong();

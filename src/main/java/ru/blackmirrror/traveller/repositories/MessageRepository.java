@@ -7,17 +7,20 @@ import ru.blackmirrror.traveller.models.Message;
 import ru.blackmirrror.traveller.models.User;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
 
-    @Query("SELECT m FROM Message m LEFT JOIN FETCH m.readBy WHERE m.id = :messageId")
-    Optional<Message> findMessageWithReadBy(@Param("messageId") Long messageId);
+    Message findMessageById(Long id);
 
-    List<Message> findByChatIdOrderByTimestampAsc(Long chatId);
+    List<Message> findByChatIdOrderByDateCreateAsc(Long chatId);
 
-    @Query("SELECT COUNT(m) FROM Message m " +
-            "WHERE m.chat.id = :chatId AND :user NOT MEMBER OF m.readBy")
-    int countUnreadMessages(@Param("chatId") Long chatId, @Param("user") User user);
+    @Query("""
+                SELECT COUNT(m)
+                FROM Message m
+                WHERE m.chat.id = :chatId
+                  AND m.read = false
+                  AND m.sender <> :user
+            """)
+    Integer countUnreadMessages(@Param("chatId") Long chatId, @Param("user") User user);
 }
 

@@ -23,7 +23,7 @@ public class MessageService {
     private UserRepository userRepository;
 
     public List<Message> getMessagesForChat(Long chatId) {
-        return messageRepository.findByChatIdOrderByTimestampAsc(chatId);
+        return messageRepository.findByChatIdOrderByDateCreateAsc(chatId);
     }
 
     public Message sendMessage(Long chatId, Long senderId, String content) {
@@ -35,24 +35,23 @@ public class MessageService {
         Message message = new Message();
         message.setChat(chat);
         message.setSender(sender);
-        message.setContent(content);
-        message.setTimestamp(System.currentTimeMillis());
-        message.setReadBy(new HashSet<>(List.of(sender))); // автоматически прочитано отправителем
+        message.setText(content);
+        message.setDateCreate(System.currentTimeMillis());
+        message.setRead(true); // автоматически прочитано отправителем
 
-        chat.setLastMessage(content);
-        chat.setLastMessageTime(message.getTimestamp());
+        chat.setLastMessageText(content);
+        chat.setLastMessageTime(message.getDateCreate());
         chatRepository.save(chat);
 
         return messageRepository.save(message);
     }
 
-    public void markAsRead(Long messageId, Long userId) {
-        Message message = messageRepository.findMessageWithReadBy(messageId)
-                .orElseThrow(() -> new RuntimeException("Message not found"));
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        message.getReadBy().add(user);
-        messageRepository.save(message);
+    public void markAsRead(Long messageId) {
+        Message message = messageRepository.findMessageById(messageId);
+        if (message != null) {
+            message.setRead(true);
+            messageRepository.save(message);
+        }
     }
 
     public void deleteMessage(Long id) {
@@ -68,15 +67,15 @@ public class MessageService {
         Message message = new Message();
         message.setChat(chat);
         message.setSender(sender);
-        message.setContent(text);
-        message.setTimestamp(System.currentTimeMillis());
-        message.setReadBy(new HashSet<>()); // Никто ещё не прочитал
+        message.setText(text);
+        message.setDateCreate(System.currentTimeMillis());
+        message.setRead(false); // Никто ещё не прочитал
 
         Message saved = messageRepository.save(message);
 
         // обновить последнее сообщение и время в чате
-        chat.setLastMessage(text);
-        chat.setLastMessageTime(saved.getTimestamp());
+        chat.setLastMessageText(text);
+        chat.setLastMessageTime(saved.getDateCreate());
         chatRepository.save(chat);
 
         return saved;

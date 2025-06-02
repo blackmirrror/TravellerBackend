@@ -1,7 +1,6 @@
 package ru.blackmirrror.traveller.controller;
 
 import ru.blackmirrror.traveller.models.User;
-import ru.blackmirrror.traveller.services.SubscribeService;
 import ru.blackmirrror.traveller.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +22,6 @@ public class UserController {
         if (createdUser != null)
             return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
         return ResponseEntity.status(HttpStatus.CONFLICT).build();
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User user) {
-        User loginUser = userService.loginUser(user);
-        if (loginUser != null)
-            return ResponseEntity.ok(loginUser);
-        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{id}")
@@ -77,6 +68,18 @@ public class UserController {
         } else {
             return ResponseEntity.noContent().build();
         }
+    }
+
+    @GetMapping("/{id}/online")
+    public ResponseEntity<Void> onlineUser(@PathVariable Long id) {
+        userService.onlineUser(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("/{id}/offline")
+    public ResponseEntity<Void> offlineUser(@PathVariable Long id) {
+        userService.offlineUser(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
 

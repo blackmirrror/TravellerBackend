@@ -31,9 +31,11 @@ public class ChatController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Chat> getChat(@PathVariable Long id) {
-        return chatService.getChatById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Chat chat = chatService.getChatById(id);
+        if (chat != null) {
+            return ResponseEntity.ok(chat);
+        }
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")

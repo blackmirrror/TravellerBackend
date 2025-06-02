@@ -29,7 +29,7 @@ public class MessageController {
     @PostMapping("/read")
     public void markAsRead(@RequestParam Long messageId,
                            @RequestParam Long userId) {
-        messageService.markAsRead(messageId, userId);
+        messageService.markAsRead(messageId);
     }
 
     @DeleteMapping("/{id}")
